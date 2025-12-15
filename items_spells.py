@@ -3,4 +3,12 @@ class Weapon():
         self.name = name
         self.dmg = dmg
 
-weapons = {'Adaga de lobo': Weapon('Adaga de lobo', 20)}
+class Armor():
+    def __init__(self, name, resistance):
+        self.name = name
+        self.resistance = resistance
+
+weapons = {
+    'Adaga de lobo': Weapon('Adaga de lobo', 100)}
+armors = {
+    'Couraça de ferro': Armor('Couraça de ferro', 0.95)}
