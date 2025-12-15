@@ -1,14 +1,21 @@
-import items_spells, random
+import items_spells, random, time, sys
+
+def print_b(string):
+    for char in string:
+        sys.stdout.write(char)
+        sys.stdout.flush()
+        time.sleep(0.03)
+    print('', end='\n')
 
 def text_action(name, rpg_class):
-    print(f'O que {name} vai fazer?')
-    print(f'Atacar (A)')
-    print(f'Usar item (I)')
-    print(f'Se defender (D)')
+    print_b(f'O que {name} vai fazer?')
+    print_b(f'Atacar (A)')
+    print_b(f'Usar item (I)')
+    print_b(f'Se defender (D)')
     if rpg_class == 'Black Mage':
-        print(f'Usar magia ofensiva (M)')
+        print_b(f'Usar magia ofensiva (M)')
     elif rpg_class == 'Knight':
-        print(f'Atrair ataque inimigo (S)')
+        print_b(f'Atrair ataque inimigo (S)')
 class Party_Member():
     def __init__(self, name, hp, weapon, armor, lv, exp, inv):
         self.name = name
@@ -23,10 +30,13 @@ class Party_Member():
         pass
     
     def attack(self, enemies):
-        print(f'Quem {self.name} irá atacar?')
+        print_b(f'Quem {self.name} irá atacar?')
         for enemy in enemies:
-            print(enemy.name + ' ' + "("+(str(enemy.id+1))+")")
+            if enemy.die == False:
+                print_b(enemy.name + ' ' + "("+(str(enemy.id+1))+")")
         action_command = int(input()) - 1
+        enemies[action_command].hp -= items_spells.weapons[self.weapon].dmg
+        print_b(f'{enemies[action_command].name} levou {items_spells.weapons[self.weapon].dmg} de dano!')
         
 
     def use_item(self):
@@ -36,14 +46,14 @@ class Party_Member():
         pass
 
     def action(self, name, role, enemies):
-        print(f'O que {name} ({role}) vai fazer?')
-        print(f'Atacar (A)')
-        print(f'Usar item (I)')
-        print(f'Se defender (D)')
+        print_b(f'O que {name} ({role}) vai fazer?')
+        print_b(f'Atacar (A)')
+        print_b(f'Usar item (I)')
+        print_b(f'Se defender (D)')
         if role == 'Black Mage':
-            print(f'Usar magia ofensiva (M)')
+            print_b(f'Usar magia ofensiva (M)')
         elif role == 'Knight':
-            print(f'Atrair ataque inimigo (S)')
+            print_b(f'Atrair ataque inimigo (S)')
         action_command = input('->')
         if action_command == 'A':
             self.attack(enemies)
@@ -62,7 +72,7 @@ class BlackMage(Party_Member):
         self.role = 'Black Mage'
 
     def use_spell(self):
-        print('Spell was used')
+        print_b('Spell was used')
     
 
 class Knight(Party_Member):
@@ -71,7 +81,7 @@ class Knight(Party_Member):
         self.role = 'Knight'
     
     def rally(self):
-        print('Rallied')
+        print_b('Rallied')
 
 class Monster():
     def __init__(self, id, name, hp, drops, exp_drop):
@@ -80,10 +90,16 @@ class Monster():
         self.hp = hp
         self.drops = drops
         self.exp_drop = exp_drop
+        self.die = False
         
-    
     def attack(self):
         pass
+
+    def check_die(self):
+        if self.hp <= 0:
+            self.die = True
+    
+
 
 class MinorWolf(Monster):
     def __init__(self, id):
@@ -91,12 +107,12 @@ class MinorWolf(Monster):
 
     def mordida(self, target):
         dano = 15
-        print(f'Lobo menor usou "Mordida" em {target.name} e deu {dano} de dano!')
+        print_b(f'Lobo menor usou "Mordida" em {target.name} e deu {dano} de dano!')
         target.hp -= dano
 
     def investida(self, target):
         dano = 10
-        print(f'Lobo menor usou "Investida" em {target.name} e deu {dano} de dano!')
+        print_b(f'Lobo menor usou "Investida" em {target.name} e deu {dano} de dano!')
         target.hp -= dano
 
     def attack(self, players):

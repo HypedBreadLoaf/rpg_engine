@@ -1,9 +1,10 @@
 import classes, random
+from classes import print_b
 main_inv = {}
-player1 = classes.BlackMage('Lucas', 100, 'aaa', 'bbbb', 1, 0, main_inv)
+player1 = classes.BlackMage('Lucas', 100, 'Adaga de lobo', 'bbbb', 1, 0, main_inv)
 #player1.use_spell()
 #print(player1.name)
-player2 = classes.Knight('Maria', 100, 'aaaa', 'aaaa', 1, 0, main_inv)
+player2 = classes.Knight('Maria', 100, 'Adaga de lobo', 'aaaa', 1, 0, main_inv)
 #wolf = classes.MinorWolf()
 players = [player1, player2]
 #wolf.attack(players)
@@ -18,16 +19,17 @@ current_party = [player1, player2]
 
 def battle(party, monsters):
     if len(monsters) == 2:
-        enemy1, enemy2 = monsters
-        enemies = [enemy1, enemy2]
-        print(f'A party foi atacada por {enemy1.name} e {enemy2.name}!')
+        print_b(f'A party foi atacada por {monsters[0].name} e {monsters[1].name}!')
     elif len(monsters) == 3:
-        enemy1, enemy2, enemy3 = monsters
-        enemies = [enemy1, enemy2, enemy3]
-        print(f'A party foi atacada por {enemy1.name}, {enemy2.name} e {enemy3.name}!')
+        print_b(f'A party foi atacada por {monsters[0].name}, {monsters[1].name} e {monsters[2].name}!')
     while True:
         for member in party:
             member.action(member.name, member.role, monsters)
+            for enemy in monsters:
+                enemy.check_die()
+        for enemy in monsters:
+            enemy.attack(party)
+
 
 def spawn(value, quantity):
     monsters = []
