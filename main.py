@@ -1,8 +1,8 @@
-import classes, random
+import classes, random, items_spells
 from classes import print_b
 main_inv = {}
-player1 = classes.BlackMage('Lucas', 100, 'Adaga de lobo', 'Couraça de ferro', 1, 0, main_inv)
-player2 = classes.Knight('Maria', 100, 'Adaga de lobo', 'Couraça de ferro', 1, 0, main_inv)
+player1 = classes.BlackMage(name='Lucas', hp=100, mp=100, weapon='Adaga de lobo', armor='Couraça de ferro', lv=2, exp=0, inv=main_inv, spells=[items_spells.spells['Ultimato']])
+player2 = classes.Knight(name='Maria', hp=100, mp=100, weapon='Adaga de lobo', armor='Couraça de ferro', lv=2, exp=0, inv=main_inv)
 players = [player1, player2]
 lv_average = 0
 lvs = []
@@ -29,9 +29,14 @@ def battle(party, monsters):
                 break
         if current_dead == all_dead:
             break
-        for enemy in monsters:
-            if enemy.die == False:
-                    enemy.attack(party)
+        else:
+            for enemy in monsters:
+                if enemy.die == False:
+                        enemy.attack(party, monsters)
+            for member in party:
+                mp = 10
+                print_b(f'{member.name} ganhou {mp} de MP.')
+                member.mp += 10
     print_b('--------------------------------------')
 
 def spawn(value, quantity):
@@ -40,17 +45,26 @@ def spawn(value, quantity):
         if value == 1:
             for id in range(2):
                 monsters.append(classes.MinorWolf(id))
+        elif value == 2:
+            monsters.append(classes.AlphaWolf(0))
+            monsters.append(classes.MinorWolf(1))
         return monsters
     elif quantity == 3:
         if value == 1:
             for id in range(3):
                 monsters.append(classes.MinorWolf(id))
+        elif value == 2:
+            monsters.append(classes.AlphaWolf(0))
+            for id in range(2):
+                monsters.append(random.choices([classes.MinorWolf(id+1), classes.AlphaWolf(id+1)], [70, 30])[0])
         return monsters
      
 while True:
     for member in current_party:
         lvs.append(member.lv)
     lv_average = sum(lvs)/len(lvs)
-    if lv_average >= 1 and lv_average <= 2:
+    if lv_average >= 1 and lv_average < 2:
         spawn_value = 1
+    elif lv_average >= 2 and lv_average < 3:
+        spawn_value = 2
     battle(current_party, spawn(spawn_value, random.choice([2,3])))
